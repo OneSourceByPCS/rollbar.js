@@ -42,7 +42,7 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
@@ -93,9 +93,9 @@
 	module.exports = globalnotifier.wrapper;
 
 
-/***/ },
+/***/ }),
 /* 1 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
@@ -214,9 +214,9 @@
 	};
 
 
-/***/ },
+/***/ }),
 /* 2 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
@@ -563,6 +563,11 @@
 	
 	NotifierPrototype._buildBody = function(message, stackInfo, custom) {
 	  var body;
+	
+	  if (custom) {
+	    custom = extend(true, {}, this._scrub(custom));
+	  }
+	
 	  if (stackInfo) {
 	    body = _buildPayloadBodyTrace(message, stackInfo, custom);
 	  } else {
@@ -705,7 +710,7 @@
 	  try {
 	    messageIsIgnored = false;
 	    ignoredMessages = this.options.ignoredMessages;
-	    
+	
 	    if (!ignoredMessages || ignoredMessages.length === 0) {
 	      return false;
 	    }
@@ -714,13 +719,13 @@
 	            payload.data &&
 	            payload.data.body;
 	
-	    traceMessage =  body && 
+	    traceMessage =  body &&
 	                    body.trace &&
-	                    body.trace.exception && 
+	                    body.trace.exception &&
 	                    body.trace.exception.message;
-	    
-	    bodyMessage = body && 
-	                  body.message && 
+	
+	    bodyMessage = body &&
+	                  body.message &&
 	                  body.message.body;
 	
 	    exceptionMessage = traceMessage || bodyMessage;
@@ -1119,7 +1124,7 @@
 	  };
 	
 	  if (custom) {
-	    result.extra = extend(true, {}, custom);
+	    result.extra = custom;
 	  }
 	
 	  return {
@@ -1197,7 +1202,7 @@
 	    trace.frames.reverse();
 	
 	    if (custom) {
-	      trace.extra = extend(true, {}, custom);
+	      trace.extra = custom;
 	    }
 	    return {trace: trace};
 	  } else {
@@ -1309,12 +1314,11 @@
 	  setupJSON: setupJSON,
 	  topLevelNotifier: topLevelNotifier
 	};
-	
 
 
-/***/ },
+/***/ }),
 /* 3 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	'use strict';
 	
@@ -1404,9 +1408,9 @@
 	
 
 
-/***/ },
+/***/ }),
 /* 4 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
@@ -1500,9 +1504,9 @@
 	};
 
 
-/***/ },
+/***/ }),
 /* 5 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (root, factory) {
 	    'use strict';
@@ -1699,15 +1703,13 @@
 	
 
 
-/***/ },
+/***/ }),
 /* 6 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (root, factory) {
 	    'use strict';
 	    // Universal Module Definition (UMD) to support AMD, CommonJS/Node.js, Rhino, and browsers.
-	
-	    /* istanbul ignore next */
 	    if (true) {
 	        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	    } else if (typeof exports === 'object') {
@@ -1721,7 +1723,7 @@
 	        return !isNaN(parseFloat(n)) && isFinite(n);
 	    }
 	
-	    function StackFrame(functionName, args, fileName, lineNumber, columnNumber, source) {
+	    function StackFrame(functionName, args, fileName, lineNumber, columnNumber) {
 	        if (functionName !== undefined) {
 	            this.setFunctionName(functionName);
 	        }
@@ -1736,9 +1738,6 @@
 	        }
 	        if (columnNumber !== undefined) {
 	            this.setColumnNumber(columnNumber);
-	        }
-	        if (source !== undefined) {
-	            this.setSource(source);
 	        }
 	    }
 	
@@ -1791,13 +1790,6 @@
 	            this.columnNumber = Number(v);
 	        },
 	
-	        getSource: function () {
-	            return this.source;
-	        },
-	        setSource: function (v) {
-	            this.source = String(v);
-	        },
-	
 	        toString: function() {
 	            var functionName = this.getFunctionName() || '{anonymous}';
 	            var args = '(' + (this.getArgs() || []).join(',') + ')';
@@ -1812,9 +1804,9 @@
 	}));
 
 
-/***/ },
+/***/ }),
 /* 7 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
@@ -2007,7 +1999,7 @@
 	  if (browser.ieVersion() <= 8) {
 	    console.error(formatArgsAsString.apply(null, arguments));
 	  } else {
-	    console.error.apply(null, arguments);
+	    console.error.apply(console, arguments);
 	  }
 	}
 	
@@ -2015,7 +2007,7 @@
 	  if (browser.ieVersion() <= 8) {
 	    console.info(formatArgsAsString.apply(null, arguments));
 	  } else {
-	    console.info.apply(null, arguments);
+	    console.info.apply(console, arguments);
 	  }
 	}
 	
@@ -2023,7 +2015,7 @@
 	  if (browser.ieVersion() <= 8) {
 	    console.log(formatArgsAsString.apply(null, arguments));
 	  } else {
-	    console.log.apply(null, arguments);
+	    console.log.apply(console, arguments);
 	  }
 	}
 	
@@ -2047,9 +2039,9 @@
 	module.exports = Util;
 
 
-/***/ },
+/***/ }),
 /* 8 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	// Console-polyfill. MIT license.
 	// https://github.com/paulmillr/console-polyfill
@@ -2072,9 +2064,9 @@
 	})(typeof window === 'undefined' ? this : window);
 
 
-/***/ },
+/***/ }),
 /* 9 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	'use strict';
 	
@@ -2106,9 +2098,9 @@
 	module.exports = Browser;
 
 
-/***/ },
+/***/ }),
 /* 10 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
@@ -2267,5 +2259,5 @@
 	};
 
 
-/***/ }
+/***/ })
 /******/ ]);
